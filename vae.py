@@ -15,26 +15,26 @@ def gaussian_MLP_encoder(x, n_hidden, n_output, keep_prob):
         b_init = tf.constant_initializer(0.)
 
         # 1st hidden layer
-        w0 = tf.Variable(
+        w0 = tf.get_variable(
             'w0', [x.get_shape()[1], n_hidden], initializer=w_init)
-        b0 = tf.Variable('b0', [n_hidden], initializer=b_init)
+        b0 = tf.get_variable('b0', [n_hidden], initializer=b_init)
         h0 = tf.matmul(x, w0) + b0
         h0 = tf.nn.elu(h0)
         h0 = tf.nn.dropout(h0, keep_prob)
 
         # 2nd hidden layer
-        w1 = tf.Variable(
+        w1 = tf.get_variable(
             'w1', [h0.get_shape()[1], n_hidden], initializer=w_init)
-        b1 = tf.Variable('b1', [n_hidden], initializer=b_init)
+        b1 = tf.get_variable('b1', [n_hidden], initializer=b_init)
         h1 = tf.matmul(h0, w1) + b1
         h1 = tf.nn.tanh(h1)
         h1 = tf.nn.dropout(h1, keep_prob)
 
         # output layer
         # borrowed from https: // github.com / altosaar / vae / blob / master / vae.py
-        w_out = tf.Variable(
+        w_out = tf.get_variable(
             'w_out', [h1.get_shape()[1], n_output * 2], initializer=w_init)
-        b_out = tf.Variable('b_out', [n_output * 2], initializer=b_init)
+        b_out = tf.get_variable('b_out', [n_output * 2], initializer=b_init)
 
         # tf.matmul矩阵与矩阵相乘 禁止与标量相乘
         gaussian_params = tf.matmul(h1, w_out) + b_out
@@ -60,26 +60,26 @@ def bernoulli_MLP_decoder(z, n_hidden, n_output, keep_prob, reuse=False):
         b_init = tf.constant_initializer(0.)
 
         # 1st hidden layer
-        w0 = tf.Variable(
+        w0 = tf.get_variable(
             'w0', [z.get_shape()[1], n_hidden], initializer=w_init)
-        b0 = tf.Variable('b0', [n_hidden], initializer=b_init)
+        b0 = tf.get_variable('b0', [n_hidden], initializer=b_init)
 
         h0 = tf.matmul(z, w0) + b0
         h0 = tf.nn.tanh(h0)
         h0 = tf.nn.dropout(h0, keep_prob)
 
         # 2nd hidden layer
-        w1 = tf.Variable(
+        w1 = tf.get_variable(
             'w1', [h0.get_shape()[1], n_hidden], initializer=w_init)
-        b1 = tf.Variable('b1', [n_hidden], initializer=b_init)
+        b1 = tf.get_variable('b1', [n_hidden], initializer=b_init)
         h1 = tf.matmul(h0, w1) + b1
         h1 = tf.nn.elu(h1)
         h1 = tf.nn.dropout(h1, keep_prob)
 
         # output layer-mean
-        w_out = tf.Variable(
+        w_out = tf.get_variable(
             'w_out', [h1.get_shape()[1], n_output], initializer=w_init)
-        b_out = tf.Variable('b_out', [n_output], initializer=b_init)
+        b_out = tf.get_variable('b_out', [n_output], initializer=b_init)
 
         # 为啥sigmod函数
         y = tf.sigmoid(tf.matmul(h1, w_out) + b_out)
